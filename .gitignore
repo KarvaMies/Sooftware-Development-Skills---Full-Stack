@@ -1,5 +1,2 @@
 Learning Diary.docx
-*/node_modules
-*/reference
-*/*.js
-!*/index.js
+**/node_modules
