@@ -18,7 +18,11 @@ const UserSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    tasks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task'
+    }]
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);
@@ -47,4 +51,12 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
         if(err) throw err;
         callback(null, isMatch);
     });
+}
+
+module.exports.addTask = function(userId, taskId, callback){
+    User.findByIdAndUpdate(userId, { $push: { tasks: taskId } }, callback);
+}
+
+module.exports.deleteTask = function(userId, taskId, callback){
+    User.findByIdAndUpdate(userId, { $pull: { tasks: taskId } }, callback);
 }

@@ -8,7 +8,10 @@ const mongoose = require('mongoose');
 const config = require('./config/database');
 
 // Connect To Database
-mongoose.connect(config.database);
+mongoose.connect(config.database, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 // On Connection
 mongoose.connection.on('connected', () => {
@@ -23,6 +26,7 @@ mongoose.connection.on('error', (err) => {
 const app = express();
 
 const users = require('./routes/users');
+const tasks = require('./routes/tasks');
 
 // Port Number
 const port = 3000;
@@ -38,11 +42,11 @@ app.use(bodyParser.json());
 
 // Passport Middleware
 app.use(passport.initialize());
-//app.use(passport.session());
 
 require('./config/passport')(passport);
 
 app.use('/users', users);
+app.use('/tasks', tasks);
 
 // Index Route
 app.get('/', (req, res) => {
