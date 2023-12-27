@@ -26,7 +26,14 @@ module.exports.addTask = function(newTask, callback){
 }
 
 module.exports.completeTask = function(id, callback){
-    Task.findByIdAndUpdate(id, { completed: true }, { new: true}, callback);
+    Task.findById(id, (err, task) => {
+        if (err) {
+            callback(err, null);
+        } else {
+            task.completed = !task.completed;
+            task.save(callback);
+        }
+    });
 }
 
 module.exports.deleteTask = function(id, callback){
