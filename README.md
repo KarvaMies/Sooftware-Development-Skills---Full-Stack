@@ -1,4 +1,5 @@
 # Software development skills - Fullstack project running guide
+## by Jeremias Moberg
 
 The project is functionally the same as the coursework, but the 'dashboard'
 component was changed to 'tasks' component and functions as todo list.
