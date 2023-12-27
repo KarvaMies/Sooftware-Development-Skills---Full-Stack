@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import 'rxjs/add/operator/do';
+
 import 'rxjs/add/operator/map';
 import { tokenNotExpired } from 'angular2-jwt';
 
@@ -30,7 +32,10 @@ export class AuthService {
     headers.append('Authorization', this.authToken);
     headers.append('Content-Type', 'application/json');
     return this.http.get('http://localhost:3000/users/profile', {headers: headers})
-    .map(res => res.json());
+    .map(res => res.json())
+    .do(profile => {
+      this.user = profile.user;
+    });
   }
 
   storeUserData(token, user) {
@@ -53,5 +58,46 @@ export class AuthService {
     this.authToken = null;
     this.user = null;
     localStorage.clear();
+  }
+
+  getTasks() {
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    headers.append('Content-Type', 'application/json');
+
+    const userId = this.user ? this.user._id : null;
+
+    return this.http.get('http://localhost:3000/tasks/get/' + userId, { headers: headers })
+      .map(res => res.json());
+  }
+
+  addTask(task) {
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    headers.append('Content-Type', 'application/json');
+
+    const newTask = { task: task};
+    return this.http.post('http://localhost:3000/tasks/create', newTask, { headers: headers })
+    .map(res => res.json());
+  }
+
+  completeTask(taskId) {
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    headers.append('Content-Type', 'application/json');
+    return this.http.put(`http://localhost:3000/tasks/complete/${taskId}`, {}, { headers: headers })
+      .map(res => res.json());
+  }
+
+  deleteTask(taskId) {
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    headers.append('Content-Type', 'application/json');
+    return this.http.delete('http://localhost:3000/tasks/delete/' + taskId, { headers: headers })
+      .map(res => res.json());
   }
 }

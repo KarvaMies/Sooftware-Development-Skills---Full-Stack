@@ -1,2 +1,18 @@
-<h2 class="page-header">Tasks</h2>
-<p>Welcome to your Task List</p>
+<h2 class="page-header">Todo List</h2>
+
+<ul class="list-group">
+    <li *ngFor="let task of tasks" class="list-group-item" [ngClass]="{ 'list-group-item-secondary': isTaskCompleted(task) }">
+        <s *ngIf="isTaskCompleted(task)">{{ task.task }}</s>
+        <span *ngIf="!isTaskCompleted(task)">{{ task.task }}</span>
+        <button class="btn btn-success btn-sm float-right" (click)="completeTask(task._id)">
+            {{ isTaskCompleted(task) ? 'Undo' : 'Complete' }}
+        </button>
+        <button class="btn btn-danger btn-sm float-right" (click)="deleteTask(task._id)">Delete</button>
+    </li>
+</ul>
+
+<div class="form-group">
+    <label for="newTask">Add New Task</label>
+    <input type="text" id="newTask" class="form-control" [(ngModel)]="newTask" />
+    <button class="btn btn-primary mt-2" (click)="addTask()">Add Task</button>
+</div>
