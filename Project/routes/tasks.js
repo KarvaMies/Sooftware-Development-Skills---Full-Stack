@@ -31,20 +31,20 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
 });
 
 // Complete Task
-router.put('/complete/:id', passport.authenticate('jwt', { session: false}), (re, res, next) => {
+router.put('/complete/:id', passport.authenticate('jwt', { session: false}), (req, res, next) => {
     const taskId = req.params.id;
 
     Task.completeTask(taskId, (err, task) => {
         if(err) {
             res.json({success: false, msg: 'Failed to complete task'});
         } else {
-            res.json({success: true, msg: 'Task completed'});
+            res.json({success: true, msg: 'Task completed:', task: task});
         }
     });
 });
 
 // Delete task
-router.delete('/delete/:id', passport.authenticate('jwt', { session: false}), (re, res, next) => {
+router.delete('/delete/:id', passport.authenticate('jwt', { session: false}), (req, res, next) => {
     const taskId = req.params.id;
     const user = req.user._id;
 
@@ -70,9 +70,9 @@ router.get('/get/:userId', passport.authenticate('jwt', { session: false }), (re
 
     Task.findByUser(userId, (err, tasks) => {
         if(err) {
-            res.json({success: false, msg: 'Failed to get tasks'});
+            res.json({ success: false, msg: 'Failed to get tasks'});
         } else {
-            res.json({success: true, msg: 'Retrieved tasks'});
+            res.json({ success: true, msg: 'Retrieved tasks', tasks: tasks });
         }
     });
 });
